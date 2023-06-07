@@ -39,8 +39,8 @@ public class AwsCdkSpringPostgresEcsFargateApp {
 ```
 
 THe code above creates:
-- A stack with name 'butterfly' (Parameter 2)
-- A datbase named 'butterflydb' (Parameter 3)
+- CDK/Cloudformation Stack named 'butterfly' (Parameter 2)
+- Database named 'butterflydb' (Parameter 3)
 - Database username 'butter' (Parameter 4)
 - Database password 'flyingbutter' (Parameter 5)
 - Pulls and runs image from 'docker.io/mlopezsoto/volunt:latest'
