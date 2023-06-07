@@ -38,7 +38,7 @@ public class AwsCdkSpringPostgresEcsFargateApp {
 }
 ```
 
-THe code above creates:
+The code above creates the folowing:
 - CDK/Cloudformation Stack named 'butterfly' (Parameter 2)
 - Database named 'butterflydb' (Parameter 3)
 - Database username 'butter' (Parameter 4)
@@ -71,8 +71,8 @@ and exposes a couple of endpoints:
 
 You can test this using the CDK output 'butterfly.ALBDNSName' (sample above) and then appending the above paths.
 
-butterfly.ALBDNSName = butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com
-then: http://butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com/user/listAll
+IF butterfly.ALBDNSName = butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com
+THEN: http://butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com/user/listAll (This link won't work. The stack used to generate this does not exist anymore)
 
 App code: https://github.com/mlopezsoto/volunt-be
 
