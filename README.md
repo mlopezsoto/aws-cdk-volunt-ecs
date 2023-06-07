@@ -23,8 +23,8 @@ import software.amazon.awscdk.App;
 public class AwsCdkSpringPostgresEcsFargateApp {
     public static void main(final String[] args) {
         App app = new App();
-
-        AwsCdkSpringPostgresEcsFargateStack.Builder.create(app, "butterfly", "butterflydb", "butter", "flyingbutter", "docker.io/mlopezsoto/volunt:latest")
+        
+        AwsCdkSpringPostgresEcsFargateStack.Builder.create(app, "butterfly", "butterflydb", "butter", "flyingbutter", "'docker.io/mlopezsoto/volunt:latest'")
                 .ecsTaskCpu(256)
                 .ecsTaskMemoryLimitMiB(512)
                 .ecsTaskDesiredCount(1)
@@ -37,6 +37,14 @@ public class AwsCdkSpringPostgresEcsFargateApp {
     }
 }
 ```
+
+THe code above creates:
+- A stack with name 'butterfly' (Parameter 2)
+- A datbase named 'butterflydb' (Parameter 3)
+- Database username 'butter' (Parameter 4)
+- Database password 'flyingbutter' (Parameter 5)
+- Pulls and runs image from 'docker.io/mlopezsoto/volunt:latest'
+
 Using the values above as an example, you can deploy your stack using:
 > cdk deploy butterfly
 
