@@ -35,10 +35,20 @@ and exposes a couple of endpoints:
 - /user/validateCredentials?username=<username>&password=<password>
 
 You can test this using the CDK output 'butterfly.ALBDNSName' and then appending the above paths.
-For instance:
+Stack Output example:
 
-butterfly.ALBDNSName = butte-butte-GHX17GAX6YQ3-835321518.ap-southeast-2.elb.amazonaws.com
-then: http://butte-butte-GHX17GAX6YQ3-835321518.ap-southeast-2.elb.amazonaws.com/user/listAll
+```
+Outputs:
+butterfly.ALBDNSName = butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com
+butterfly.DatabaseAddress = butterfly-database-postgresql.cmwkrmicwxfc.ap-southeast-2.rds.amazonaws.com
+butterfly.DatabasePort = 5432
+butterfly.butterflyecsserviceLoadBalancerDNS7FF68FBE = butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com
+butterfly.butterflyecsserviceServiceURL1D691D62 = http://butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com
+butterfly.datasourceUrl = jdbc:postgresql://butterfly-database-postgresql.cmwkrmicwxfc.ap-southeast-2.rds.amazonaws.com:5432/butterflydb
+```
+
+butterfly.ALBDNSName = butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com
+then: http://butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com/user/listAll
 
 App code: https://github.com/mlopezsoto/volunt-be
 
