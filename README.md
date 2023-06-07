@@ -31,8 +31,8 @@ app.synth();
 The image 'docker.io/mlopezsoto/volunt:latest' contains a basic Spring Boot app that creates a user table
 and exposes a couple of endpoints:
 
-/user/listAll
-/user/validateCredentials?username=<username>&password=<password>
+- /user/listAll
+- /user/validateCredentials?username=<username>&password=<password>
 
 You can test this using the CDK output 'butterfly.ALBDNSName' and then appending the above paths.
 For instance:
