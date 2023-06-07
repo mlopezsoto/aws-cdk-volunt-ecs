@@ -11,7 +11,7 @@ To install AWS CDK follow the steps outlined here: https://cdkworkshop.com/
 ## Stack Steps
 * VPN creation with two subnets, one public one isolated (software.amazon.awscdk.services.ec2.Vpc).
 * Postgres Database creation (software.amazon.awscdk.services.rds.DatabaseInstance).
-* ECS Fargate Cluster creation(software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedFargateService).
+* ECS Fargate Cluster creation (software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedFargateService).
 
 
 ## Usage example
