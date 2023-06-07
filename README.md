@@ -41,7 +41,7 @@ Using the values above as an example, you can deploy your stack using:
 > cdk deploy butterfly
 
 After it finishes, it will display some results and your application will be available online. Your application should be 
-available from the Loan Balancer DNS name, which you can get from the output 'ALBDNSName'. The prefix changes depending on the
+available from the Load Balancer DNS name, which you can get from the output 'ALBDNSName'. The prefix changes depending on the
 name you use for your stack, in our case it is 'butterfly'.
 
 ```
