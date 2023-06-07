@@ -1,18 +1,51 @@
-# Welcome to your CDK Java project!
+# Java AWS CDK Stack for a Spring Boot App that uses a Database
+This AWS CDK Stack deploys a Spring Boot based app to ECS. It assumes the image is a Spring boot that connects to a database.
 
-This is a blank project for CDK development with Java.
+## Requirements
+You would need a AWS Java CDK project.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Stack Steps
+* VPN creation with two subnets, one public one isolated.
+* Postgres Database creation. 
+* ECS Fargate Cluster creation.
 
-It is a [Maven](https://maven.apache.org/) based project, so you can open this project with any Maven compatible Java IDE to build and run tests.
 
-## Useful commands
+## Usage example
 
- * `mvn package`     compile and run tests
- * `cdk ls`          list all stacks in the app
- * `cdk synth`       emits the synthesized CloudFormation template
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk docs`        open CDK documentation
+```java
+App app = new App();
 
-Enjoy!
+AwsCdkSpringPostgresEcsFargateStack.Builder.create(app, "butterfly", "butterflydb", "butter", "flyingbutter", "docker.io/mlopezsoto/volunt:latest")
+.ecsTaskCpu(512)
+.ecsTaskMemoryLimitMiB(512)
+.ecsTaskDesiredCount(2)
+.springContainerPort(8080)
+.targetGroupHealthCheckPath("/actuator/health")
+.vpcMaxAzs(3)
+.build();
+
+app.synth();
+```
+
+## Sample App
+The image 'docker.io/mlopezsoto/volunt:latest' contains a basic Spring Boot app that creates a user table
+and exposes a couple of endpoints:
+
+/user/listAll
+/user/validateCredentials?username=<username>&password=<password>
+
+You can test this using the CDK output 'butterfly.ALBDNSName' and then appending the above paths.
+For instance:
+
+butterfly.ALBDNSName = butte-butte-GHX17GAX6YQ3-835321518.ap-southeast-2.elb.amazonaws.com
+then: http://butte-butte-GHX17GAX6YQ3-835321518.ap-southeast-2.elb.amazonaws.com/user/listAll
+
+App code: https://github.com/mlopezsoto/volunt-be
+
+## Basic CDK commands
+### List all Stacks
+> cdk ls
+### Deploy a stack, for instance a stack named 'butterfly' as in the sample code above
+> cdk deploy butterfly
+### Destroy (undeploy) a stack, for instance a stack named 'butterfly' as in the sample code above
+> cdk destroy butterfly
