@@ -2,7 +2,7 @@
 This AWS CDK Stack deploys a Spring Boot based app to ECS. It assumes the image is a Spring boot that connects to a database.
 
 ## Code Repository
-https://github.com/mlopezsoto/aws-cdk-volunt-ecs
+[https://github.com/mlopezsoto/aws-cdk-volunt-ecs](https://github.com/mlopezsoto/aws-cdk-volunt-ecs)
 
 ## Requirements
 - AWS Account
