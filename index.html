@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="gefvmxd94Y8BCiO70-5Plw1_gpnwGRXGsEYmtojm_Kw" />
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Java AWS CDK Stack for a Spring Boot App that uses a Database | aws-cdk-volunt-ecs</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Java AWS CDK Stack for a Spring Boot App that uses a Database" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="AWS Cloud Development Kit (CDK) Example - Spring Boot and Postgres DB Deployed to ECS, Using Fargate and ALB" />
+<meta property="og:description" content="AWS Cloud Development Kit (CDK) Example - Spring Boot and Postgres DB Deployed to ECS, Using Fargate and ALB" />
+<link rel="canonical" href="https://mlopezsoto.github.io/aws-cdk-volunt-ecs/" />
+<meta property="og:url" content="https://mlopezsoto.github.io/aws-cdk-volunt-ecs/" />
+<meta property="og:site_name" content="aws-cdk-volunt-ecs" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Java AWS CDK Stack for a Spring Boot App that uses a Database" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"AWS Cloud Development Kit (CDK) Example - Spring Boot and Postgres DB Deployed to ECS, Using Fargate and ALB","headline":"Java AWS CDK Stack for a Spring Boot App that uses a Database","name":"aws-cdk-volunt-ecs","url":"https://mlopezsoto.github.io/aws-cdk-volunt-ecs/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/aws-cdk-volunt-ecs/assets/css/style.css?v=a863dd7dbc528a2e160c3d98206c1623ffac8ca5">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/aws-cdk-volunt-ecs/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://mlopezsoto.github.io/aws-cdk-volunt-ecs/">aws-cdk-volunt-ecs</a></h1>
+      
+
+      <h1 id="java-aws-cdk-stack-for-a-spring-boot-app-that-uses-a-database">Java AWS CDK Stack for a Spring Boot App that uses a Database</h1>
+<p>This AWS CDK Stack deploys a Spring Boot based app to ECS. It assumes the image is a Spring boot that connects to a database.</p>
+
+<h2 id="code-repository">Code Repository</h2>
+<p><a href="https://github.com/mlopezsoto/aws-cdk-volunt-ecs">https://github.com/mlopezsoto/aws-cdk-volunt-ecs</a></p>
+
+<h2 id="requirements">Requirements</h2>
+<ul>
+  <li>AWS Account</li>
+  <li>Java AWS CDK project.</li>
+</ul>
+
+<p>To install AWS CDK follow the steps outlined here: https://cdkworkshop.com/</p>
+
+<h2 id="stack-steps">Stack Steps</h2>
+<ul>
+  <li>VPN creation with two subnets, one public one isolated (software.amazon.awscdk.services.ec2.Vpc).</li>
+  <li>Postgres Database creation (software.amazon.awscdk.services.rds.DatabaseInstance).</li>
+  <li>ECS Fargate Cluster creation (software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedFargateService).</li>
+</ul>
+
+<h2 id="usage-example">Usage example</h2>
+<p>Once you have your AWS CDK project, you can copy the class AwsCdkSpringPostgresEcsFargateStack to your project and use it. For instance:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">software.amazon.awscdk.App</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AwsCdkSpringPostgresEcsFargateApp</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">App</span> <span class="n">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">App</span><span class="o">();</span>
+        
+        <span class="nc">AwsCdkSpringPostgresEcsFargateStack</span><span class="o">.</span><span class="na">Builder</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">app</span><span class="o">,</span> <span class="s">"butterfly"</span><span class="o">,</span> <span class="s">"butterflydb"</span><span class="o">,</span> <span class="s">"butter"</span><span class="o">,</span> <span class="s">"flyingbutter"</span><span class="o">,</span> <span class="s">"'docker.io/mlopezsoto/volunt:latest'"</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">ecsTaskCpu</span><span class="o">(</span><span class="mi">256</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">ecsTaskMemoryLimitMiB</span><span class="o">(</span><span class="mi">512</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">ecsTaskDesiredCount</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">springContainerPort</span><span class="o">(</span><span class="mi">8080</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">targetGroupHealthCheckPath</span><span class="o">(</span><span class="s">"/actuator/health"</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">vpcMaxAzs</span><span class="o">(</span><span class="mi">3</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+        <span class="n">app</span><span class="o">.</span><span class="na">synth</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>The code above creates the folowing:</p>
+<ul>
+  <li>CDK/Cloudformation Stack named ‘butterfly’ (Parameter 2)</li>
+  <li>Database named ‘butterflydb’ (Parameter 3)</li>
+  <li>Database username ‘butter’ (Parameter 4)</li>
+  <li>Database password ‘flyingbutter’ (Parameter 5)</li>
+  <li>Pulls and runs image from ‘docker.io/mlopezsoto/volunt:latest’</li>
+</ul>
+
+<p>Using the values above as an example, you can deploy your stack using:</p>
+<blockquote>
+  <p>cdk deploy butterfly</p>
+</blockquote>
+
+<p>After it finishes, it will display some results and your application will be available online. Your application should be 
+available from the Load Balancer DNS name, which you can get from the output ‘ALBDNSName’. The prefix changes depending on the
+name you use for your stack, in our case it is ‘butterfly’.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Outputs:
+butterfly.ALBDNSName = butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com
+butterfly.DatabaseAddress = butterfly-database-postgresql.cmwkrmicwxfc.ap-southeast-2.rds.amazonaws.com
+butterfly.DatabasePort = 5432
+butterfly.butterflyecsserviceLoadBalancerDNS7FF68FBE = butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com
+butterfly.butterflyecsserviceServiceURL1D691D62 = http://butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com
+butterfly.datasourceUrl = jdbc:postgresql://butterfly-database-postgresql.cmwkrmicwxfc.ap-southeast-2.rds.amazonaws.com:5432/butterflydb
+</code></pre></div></div>
+
+<h2 id="sample-app">Sample App</h2>
+<p>The image ‘docker.io/mlopezsoto/volunt:latest’ contains a basic Spring Boot app that creates a user table
+and exposes a couple of endpoints:</p>
+
+<ul>
+  <li>/user/listAll</li>
+  <li>/user/validateCredentials?username=<username>&amp;password=<password></password></username></li>
+</ul>
+
+<p>You can test this using the CDK output ‘butterfly.ALBDNSName’ (sample above) and then appending the above paths.</p>
+
+<p>IF butterfly.ALBDNSName = butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com
+THEN: http://butte-butte-DZD07FFTQKI5-224749273.ap-southeast-2.elb.amazonaws.com/user/listAll (This link won’t work. The stack used to generate this does not exist anymore)</p>
+
+<p>App code: https://github.com/mlopezsoto/volunt-be</p>
+
+<p>Note: You can use your own image. This stack will deploy your image and set environment vars for your database access.</p>
+
+<h2 id="basic-cdk-commands">Basic CDK commands</h2>
+<h3 id="list-all-stacks">List all Stacks</h3>
+<blockquote>
+  <p>cdk ls</p>
+  <h3 id="deploy-a-stack-for-instance-a-stack-named-butterfly-as-in-the-sample-code-above">Deploy a stack, for instance a stack named ‘butterfly’ as in the sample code above</h3>
+  <p>cdk deploy butterfly</p>
+  <h3 id="destroy-undeploy-a-stack-for-instance-a-stack-named-butterfly-as-in-the-sample-code-above">Destroy (undeploy) a stack, for instance a stack named ‘butterfly’ as in the sample code above</h3>
+  <p>cdk destroy butterfly</p>
+</blockquote>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>
