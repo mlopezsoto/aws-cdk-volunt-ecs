@@ -2,6 +2,7 @@ package com.butterfly.aws;
 
 import com.butterfly.util.Tuple;
 import software.amazon.awscdk.*;
+import software.amazon.awscdk.services.ec2.InstanceType;
 import software.amazon.awscdk.services.ec2.*;
 import software.amazon.awscdk.services.ecs.Cluster;
 import software.amazon.awscdk.services.ecs.ContainerImage;
@@ -63,8 +64,8 @@ public class AwsCdkSpringPostgresEcsFargateStack extends Stack {
         this.springContainerPort = builder.springContainerPort;
 
         Vpc vpc = getVpc(stackId);
-        Tuple<DatabaseInstance, SecurityGroup> database = getDatabaseInstanceAndSecurityGroup(vpc);
-        ApplicationLoadBalancedFargateService applicationLoadBalancedFargateService = getEcs(vpc, database);
+        Tuple<DatabaseInstance, SecurityGroup> databaseAndEcsSecurityGroup = getDatabaseInstanceAndEcsSecurityGroup(vpc);
+        ApplicationLoadBalancedFargateService applicationLoadBalancedFargateService = getEcs(vpc, databaseAndEcsSecurityGroup);
 
         new CfnOutput(this, "ALB DNS Name", CfnOutputProps.builder().value(applicationLoadBalancedFargateService.getLoadBalancer().getLoadBalancerDnsName()).build());
 
@@ -89,20 +90,20 @@ public class AwsCdkSpringPostgresEcsFargateStack extends Stack {
                 .build();
     }
 
-    private Tuple<DatabaseInstance, SecurityGroup> getDatabaseInstanceAndSecurityGroup(Vpc vpc) {
+    private Tuple<DatabaseInstance, SecurityGroup> getDatabaseInstanceAndEcsSecurityGroup(Vpc vpc) {
 
-        final SecurityGroup fargateSecurityGroup = new SecurityGroup(this,  stackId + "-ecs-fargate-security-group",  SecurityGroupProps.builder()
+        final SecurityGroup ecsSecurityGroup = new SecurityGroup(this,  stackId + "-ecs-fargate-security-group",  SecurityGroupProps.builder()
                 .vpc(vpc)
-                .description("Fargate Security Group")
+                .description("ECS Security Group")
                 .build());
-        fargateSecurityGroup.addEgressRule(Peer.anyIpv4(), Port.tcp(5432), "Egress rule to DB port");
+        ecsSecurityGroup.addEgressRule(Peer.anyIpv4(), Port.tcp(5432), "Egress rule to DB port");
 
         final SecurityGroup databaseSecurityGroup =  new SecurityGroup(this, stackId + "-database-security-group", SecurityGroupProps.builder()
                 .vpc(vpc)
                 .description("Database Security Group")
                 .build());
 
-        databaseSecurityGroup.addIngressRule(Peer.securityGroupId(fargateSecurityGroup.getSecurityGroupId()), Port.tcp(5432), "Ingress rule to DB port");
+        databaseSecurityGroup.addIngressRule(Peer.securityGroupId(ecsSecurityGroup.getSecurityGroupId()), Port.tcp(5432), "Ingress rule to DB port");
 
 
         final IInstanceEngine instanceEngine = DatabaseInstanceEngine.postgres(
@@ -126,15 +127,15 @@ public class AwsCdkSpringPostgresEcsFargateStack extends Stack {
         new CfnOutput(this, "Database Address", CfnOutputProps.builder().value(databaseInstance.getDbInstanceEndpointAddress()).build());
         new CfnOutput(this, "Database Port", CfnOutputProps.builder().value(databaseInstance.getDbInstanceEndpointPort()).build());
 
-        return new Tuple<>(databaseInstance, fargateSecurityGroup);
+        return new Tuple<>(databaseInstance, ecsSecurityGroup);
     }
 
-    private ApplicationLoadBalancedFargateService getEcs(Vpc vpc, Tuple<DatabaseInstance, SecurityGroup> database) {
+    private ApplicationLoadBalancedFargateService getEcs(Vpc vpc, Tuple<DatabaseInstance, SecurityGroup> databaseAndEcsSecurityGroup) {
         Cluster cluster = Cluster.Builder.create(this, stackId + "-ecs-cluster")
                 .vpc(vpc)
                 .build();
 
-        String datasourceUrl = "jdbc:postgresql://" + database.getElement1().getDbInstanceEndpointAddress() + ":" + database.getElement1().getDbInstanceEndpointPort() + "/" + dbName;
+        String datasourceUrl = "jdbc:postgresql://" + databaseAndEcsSecurityGroup.getElement1().getDbInstanceEndpointAddress() + ":" + databaseAndEcsSecurityGroup.getElement1().getDbInstanceEndpointPort() + "/" + dbName;
         new CfnOutput(this, "datasourceUrl", CfnOutputProps.builder().value(datasourceUrl).build());
 
         // Create a load-balanced Fargate service and make it public
@@ -156,7 +157,7 @@ public class AwsCdkSpringPostgresEcsFargateStack extends Stack {
                 .memoryLimitMiB(ecsTaskMemoryLimitMiB)       // Default is 512
                 .publicLoadBalancer(true)   // Default is true
                 .assignPublicIp(true)
-                .securityGroups(Collections.singletonList(database.getElement2()))
+                .securityGroups(Collections.singletonList(databaseAndEcsSecurityGroup.getElement2()))
                 .build();
 
         albfs.getTargetGroup().configureHealthCheck(new HealthCheck.Builder()
